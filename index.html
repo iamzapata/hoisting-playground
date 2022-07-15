@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Hoisting Playground</title>
+  </head>
+  <body>
+    <script>
+      function Foo() {
+        // This is 'undefined', but becaus of 'var' hoisting, it can be accesesed
+        console.log("this is foka: " + foka);
+
+        // Scope is Foo, cannot be accessed outside Foo
+        var foka = "I am a foca";
+
+        // declaration and initialisation can be split
+        var parentFoka;
+        parentFoka = "Papa foca";
+
+        // withouat a 'var', 'let', or 'const' declaration, this permeates to the global scope,
+        // it gets added as a property on the global object
+        LALA = "LALALALA";
+
+        // Scope is Foo, declaration is hoisted, but not initialized
+        let letBinding = "let_binding";
+
+        // declaration and initialisation can be split
+        let safeToDeclareEmpty;
+        safeToDeclareEmpty = "this is a test";
+
+        // Scope is Foo, declaration is hoisted, but not initialize.
+        // declaration and initialisation cannot be split for 'const'
+        const constBinding = "const_binding";
+
+        /**
+          const notSafeToDeclare;
+          notSafeToDeclare = 'this will fail'
+
+          The above results in an error:
+
+          Uncaught SyntaxError: Missing initializer in const declaration.
+
+          This error blocks parsing.
+        ** /
+
+        /**
+          function expressions are not hoisted, thus cannot be
+          acceses before they're declared.
+
+          console.log(functionExpression);
+          Uncaught ReferenceError: Cannot access 'functionExpression' before initialization
+        **/
+
+        const functionExpression = function () {
+          return "YOLO: " + this.constructor.name;
+        };
+
+        // setting myName on the window object if Foo invoked without a context
+        this.myName = "This is my name";
+
+        console.log(functionExpression.call(Foo));
+
+        console.log(this.myName); // this -> Window
+
+        // Can reference Dog, cannot instantiate here.
+        // Can reference Cat, cannot instantiate here.
+        const dogClassRef = Dog;
+        const catClassRef = Cat;
+
+        function Bar() {
+          var barLocal = "local to Bar";
+
+          function Baz() {
+            var bazLocal = "local to Baz";
+
+            console.log("baz yolo undefined: " + yolo);
+
+            var yolo = "you only live once";
+
+            // Even though it's nested, it permeates to the window object as a property
+            SOYO = "ITSME";
+
+            if (true) {
+              // It permeates to the window object as a property
+              ANDRES = "ANDRES";
+            }
+
+            {
+              // It permeates to the window object as a property
+              NATALY = "NATALY";
+            }
+          }
+          Baz();
+        }
+
+        Bar();
+
+        class Dog {
+          constructor(name) {
+            this.name = name;
+          }
+        }
+
+        const Cat = class {
+          constructor(name) {
+            this.name = name;
+          }
+        };
+
+        const newDog = new dogClassRef("firulais");
+        const newCat = new catClassRef("fluffikins");
+      }
+
+      //debugger;
+      Foo();
+    </script>
+  </body>
+</html>
